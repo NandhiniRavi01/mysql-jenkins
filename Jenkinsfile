@@ -10,12 +10,13 @@ pipeline {
     }
 
     stages {
-        // Install Python dependencies
+        // Install Python dependencies inside a virtual environment
         stage('Install Dependencies') {
             steps {
                 script {
-                    // Install the necessary packages, including mysql-connector-python
-                    sh 'pip install -r requirements.txt'  // Or manually install: pip install mysql-connector-python
+                    // Create a virtual environment and activate it
+                    sh 'python3 -m venv venv'
+                    sh '. venv/bin/activate && pip install -r requirements.txt'  // Activate venv and install dependencies
                 }
             }
         }
@@ -42,7 +43,7 @@ pipeline {
         stage('Run Python Code') {
             steps {
                 script {
-                    sh 'python3 test_mysql.py'
+                    sh '. venv/bin/activate && python3 test_mysql.py'  // Run python script using the virtual environment
                 }
             }
         }
@@ -51,6 +52,7 @@ pipeline {
             steps {
                 script {
                     sh 'docker stop ${MYSQL_CONTAINER} && docker rm ${MYSQL_CONTAINER}'
+                    sh 'deactivate'  // Deactivate virtual environment after use
                 }
             }
         }
