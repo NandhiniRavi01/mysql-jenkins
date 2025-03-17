@@ -10,6 +10,16 @@ pipeline {
     }
 
     stages {
+        // Install Python dependencies
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    // Install the necessary packages, including mysql-connector-python
+                    sh 'pip install -r requirements.txt'  // Or manually install: pip install mysql-connector-python
+                }
+            }
+        }
+
         stage('Start MySQL Container') {
             steps {
                 script {
@@ -46,4 +56,3 @@ pipeline {
         }
     }
 }
-
