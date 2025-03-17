@@ -48,13 +48,6 @@ pipeline {
             }
         }
 
-        stage('Cleanup') {
-            steps {
-                script {
-                    sh 'docker stop ${MYSQL_CONTAINER} && docker rm ${MYSQL_CONTAINER}'
-                    sh 'deactivate'  // Deactivate virtual environment after use
-                }
-            }
-        }
+        
     }
 }
