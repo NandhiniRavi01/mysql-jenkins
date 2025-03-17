@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        MYSQL_CONTAINER = "mysql_db"
+        MYSQL_CONTAINER = "mysql_db1"
         MYSQL_ROOT_PASSWORD = "nandhu01"
         MYSQL_DATABASE = "test_db"
         MYSQL_USER = "root"
@@ -30,7 +30,7 @@ pipeline {
                         -e MYSQL_DATABASE=${MYSQL_DATABASE} \
                         -e MYSQL_USER=${MYSQL_USER} \
                         -e MYSQL_PASSWORD=${MYSQL_PASSWORD} \
-                        -p 3307:3306 \
+                        -p 3308:3306 \
                         mysql:latest
 
                     echo "Waiting for MySQL to be ready..."
