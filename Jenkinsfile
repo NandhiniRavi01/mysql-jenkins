@@ -44,17 +44,23 @@ pipeline {
             }
         }
 
-        stage('Run Containers with Docker Compose') {
-            steps {
-                script {
-                    echo 'Starting containers using Docker Compose...'
-                    sh 'docker-compose up -d --build'
-
-                    echo 'Waiting for MySQL to be ready...'
-                    sh 'docker exec ${MYSQL_CONTAINER} mysqladmin ping -h mysql --silent || exit 1'
-                }
+       stage('Run Containers with Docker Compose') {
+    steps {
+        script {
+            echo 'Starting containers using Docker Compose...'
+            // Run the multi-container setup using Docker Compose
+            sh 'docker-compose up -d --build'
+            
+            // Ensure MySQL is ready before running tests
+            echo 'Waiting for MySQL to be ready...'
+            retry(5) {  // Retries up to 5 times in case MySQL is still starting
+                sleep 5  // Wait for 5 seconds before checking again
+                sh 'docker exec mysql_db mysqladmin ping -h mysql_db --silent || exit 1'
             }
         }
+    }
+}
+
 
         stage('Test Services') {
             parallel {
