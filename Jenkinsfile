@@ -6,6 +6,7 @@ pipeline {
         BACKEND_DIR = '.'    // Python backend directory
         DOCKER_IMAGE_FRONTEND = 'my-react-app'
         DOCKER_IMAGE_BACKEND = 'my-python-api-app'
+        DOCKER_IMAGE_BACKEND_SERVER = 'my-python-api-server'
         DOCKER_IMAGE_MYSQL = 'my-mysql-db'
         MYSQL_CONTAINER = 'mysql_db'
         PATH = "/usr/local/bin:${env.PATH}"
@@ -37,6 +38,9 @@ pipeline {
 
                     echo 'Building Docker image for the backend app...'
                     sh 'docker build -t ${DOCKER_IMAGE_BACKEND} -f Dockerfile.backend .'
+                    
+                    echo 'Building Docker image for the backend server...'
+                    sh 'docker build -t ${DOCKER_IMAGE_BACKEND_SERVER} -f Dockerfile.server .'
 
                     echo 'Building Docker image for MySQL...'
                     sh 'docker build -t ${DOCKER_IMAGE_MYSQL} -f Dockerfile.mysql .'
@@ -84,16 +88,7 @@ pipeline {
                     }
                 }
 
-                stage('Test MySQL') {
-                    steps {
-                        script {
-                            echo 'Testing MySQL connection...'
-                            sh 'docker exec ${MYSQL_CONTAINER} mysql -uroot -pnandhu01 -e "SHOW DATABASES;" || exit 1'
-                        }
-                    }
-                }
-            }
-        }
+               
 
         stage('Clean Up') {
             steps {
